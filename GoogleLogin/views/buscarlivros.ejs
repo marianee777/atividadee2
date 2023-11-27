@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Buscar Livros</title>
+		<style>
+			body {
+				background-color: #c6bfca;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.container {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				align-items: center;
+				padding: 15px;
+			}
+
+			input {
+				width: 50%;
+				padding: 10px;
+				margin: 10px 0;
+				border: none;
+				border-radius: 20px;
+			}
+
+			button {
+				background-color: #4caf50;
+				color: #fff;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 4px;
+				font-size: 16px;
+				transition: background-color 0.3s;
+			}
+
+			h1 {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				font-weight: 700;
+			}
+
+			.livro-card {
+				background-color: #fff;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				margin: 10px;
+				padding: 15px;
+				width: 300px;
+				box-sizing: border-box;
+			}
+
+			.livro-card h6 {
+				margin-bottom: 10px;
+			}
+
+			.imagem {
+				height: 400px;
+			}
+
+			.livro-card img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Livros testando</h1>
+		<!-- Adicionando o campo de pesquisa -->
+		<form id="searchForm" action="/buscarlivros" method="post">
+			<input
+				type="text"
+				id="livroSearch"
+				placeholder="Digite o nome do livro"
+			/>
+			<button type="button" onclick="buscarLivros()">
+				Buscar Livros
+			</button>
+		</form>
+
+		<div class="container">
+			<% for (items of items) { %>
+			<div class="livro-card">
+				<div class="imagem">
+					<img
+						src="<%= items.volumeInfo.imageLinks?.thumbnail %>"
+						alt="Capa do Livro"
+					/>
+				</div>
+				<h5><%= items.volumeInfo.title %></h5>
+			</div>
+			<% } %>
+		</div>
+
+		<script>
+			function buscarLivros() {
+				const pesquisa = document.getElementById('livroSearch').value;
+				fetch('/buscarlivros', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ pesquisa: pesquisa }),
+				}).catch((error) =>
+					console.error('Erro ao enviar requisição:', error)
+				);
+			}
+		</script>
+	</body>
+</html>

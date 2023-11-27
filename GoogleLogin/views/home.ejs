@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Manrope:wght@600&display=swap"
+			rel="stylesheet"
+		/>
+		<title>Home</title>
+	</head>
+
+	<body>
+		<div class="container">
+			<h1 class="title">BooksAPI</h1>
+
+			<script src="https://accounts.google.com/gsi/client" async></script>
+
+			<script
+				type="module"
+				src="/node_modules/jwt-decode/build/esm/index.js"
+			></script>
+
+			<script type="module">
+				import { jwtDecode } from '/node_modules/jwt-decode/build/esm/index.js';
+
+				function handleCredentialResponse(response) {
+					const token = response.credential; // Assuming the response is the token
+					const decoded = jwtDecode(token);
+					console.log(decoded);
+
+					// Now you can use the decoded token as needed.
+					// Example: Check if the token is valid
+					const isValid = verifyToken(token); // Assuming you have a verifyToken function
+
+					if (isValid) {
+						// Token is valid, perform further actions
+						console.log('Token is valid');
+					} else {
+						console.log('Token is not valid');
+					}
+				}
+
+				window.onload = function () {
+					google.accounts.id.initialize({
+						client_id:
+							'111459988206-ti29mb5g300odlp1khj4upts46jst0lb.apps.googleusercontent.com',
+						callback: handleCredentialResponse,
+					});
+
+					google.accounts.id.renderButton(
+						document.getElementById('buttonDiv'),
+						{
+							theme: 'filled_blue',
+							size: 'large',
+							type: 'standard',
+							shape: 'rectangular',
+							text: 'signin_with',
+							locale: 'en-US',
+							logo_alignment: 'left',
+						}
+					);
+
+					google.accounts.id.prompt(); // also display the One Tap dialog
+				};
+
+				// Function to verify JWT on the client side
+				function verifyToken(token) {
+					try {
+						// Replace 'your-secret-key' with your actual secret key used for signing the token
+						const decoded = jwt.verify(token);
+						return true; // Token is valid
+					} catch (error) {
+						console.error('Error verifying token:', error);
+						return false; // Token is invalid
+					}
+				}
+			</script>
+			<div id="buttonDiv"></div>
+		</div>
+	</body>
+</html>
